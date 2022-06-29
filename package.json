@@ -12,7 +12,7 @@
   },
 
   "scripts": {
-    "install-all": "yarn-recursive",
+    "install": "yarn-recursive",
     "web": "yarn --cwd frontend/ start",
     "api": "yarn --cwd api/ start",
     "proxy": "yarn --cwd proxy/ start",
