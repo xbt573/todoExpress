@@ -26,7 +26,7 @@ jobs:
           yarn install-all
 
       - name: Migrate database
-        run: yarn build
+        run: DATABASE_URL="postgres://postgres:postgres@localhost/todoexpress" yarn build
 
       - name: Lint code
         run: yarn lint

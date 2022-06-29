@@ -131,4 +131,4 @@ dist
 
 
 # Migrations
-migrations/
+migrations/*
