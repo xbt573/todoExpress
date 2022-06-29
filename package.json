@@ -12,11 +12,11 @@
   },
 
   "scripts": {
-    "install": "yarn-recursive",
+    "install-all": "yarn-recursive",
     "web": "yarn --cwd frontend/ start",
     "api": "yarn --cwd api/ start",
     "proxy": "yarn --cwd proxy/ start",
-    "build": "yarn --cwd api/ build; yarn --cwd frontend/ build",
+    "build": "yarn install-all; yarn --cwd api/ build; yarn --cwd frontend/ build",
     "lint": "eslint api/index.js frontend/index.js proxy/index.js",
     "start": "concurrently \"yarn api\" \"yarn web\" \"yarn proxy\" --kill-others"
   }
