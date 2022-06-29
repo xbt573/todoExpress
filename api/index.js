@@ -1,16 +1,20 @@
 const express = require('express');
 const app = express();
 
+// ORM models
 const { Users, Tasks } = require('./models');
 
 const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'youraccesstokensecret';
 
 const crypto = require('crypto');
+
+// Helper for md5 hashing
 const makeHash = (str) => {
     return crypto.createHash('md5').update(str).digest('hex');
 };
 
+// JWT authentification
 const authJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -30,9 +34,34 @@ const authJWT = (req, res, next) => {
     }
 };
 
+// Body parser
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
+/*
+    POST /api/register
+
+    - Register
+
+    Request body:
+    {
+        "username": "xbt573",
+        "password": "testpass"
+    }
+
+    Response body:
+    {
+        // Only if error occured
+        "error": "Error",
+
+        // true if all ok, else false
+        "success": true
+    }
+
+    Possible HTTP codes:
+        200: All ok
+        400: Username or password is invalid
+        409: User already exists
+ */
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
 
@@ -75,6 +104,35 @@ app.post('/api/register', async (req, res) => {
     res.status(200).json({ success: true });
 });
 
+/*
+    POST /api/login
+
+    - Login
+
+    Request body:
+    {
+        "username": "xbt573",
+        "password": "testpass"
+    }
+
+    Response body:
+    {
+        // Only if error occured
+        "error": "Error",
+
+        // Only if all ok
+        "jwt": "jsonwebtoken",
+
+        // true if all ok, else false
+        "success": true
+    }
+
+    Possible HTTP codes:
+        200: All ok
+        400: Username or password is invalid
+        403: Username or password is incorrect
+
+*/
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -115,6 +173,35 @@ app.post('/api/login', async (req, res) => {
     });
 });
 
+
+/*
+    POST /api/tasks
+
+    - Create new task
+
+    Request headers:
+        Authorization: Bearer jsonwebtoken
+
+    Request body:
+    {
+        "title": "Hello World!"
+    }
+
+    Response body:
+    {
+        // Only if error occured
+        "error": "Error",
+
+        // true if all ok, else false
+        "success": true
+    }
+
+    Possible HTTP codes:
+        200: All ok
+        403: Unauthorized
+        400: Title is invalid
+        409: Task already exists
+*/
 app.post('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
     const { title } = req.body;
@@ -152,6 +239,27 @@ app.post('/api/tasks', authJWT, async (req, res) => {
     });
 });
 
+/*
+    GET /api/tasks
+
+    - Get tasks
+
+    Request headers:
+        Authorization: Bearer jsonwebtoken
+
+    Request body: null
+
+    Response body:
+        Array of tasks:
+        {
+            "id": 0,
+            "title": "Hello World!"
+        }
+
+    Possible HTTP codes:
+        200: All ok
+        403: Unauthorized
+*/
 app.get('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
 
@@ -166,6 +274,32 @@ app.get('/api/tasks', authJWT, async (req, res) => {
     res.json(tasks);
 });
 
+/*
+    PATCH /api/tasks
+
+    - Update task
+
+    Request body:
+    {
+        "id": 0,
+        "title": "Hello World!"
+    }
+
+    Response body:
+    {
+        // Only if error occured
+        "error": "Error",
+
+        // true if all ok, else false
+        "success": true
+    }
+
+    Possible HTTP codes:
+        200: All ok
+        403: Unauthorized
+        400: Id or title is invalid
+        404: Task not found
+*/
 app.patch('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
     const { id, title } = req.body;
@@ -201,7 +335,6 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
         return;
     }
 
-    console.log('Update!');
     await Tasks.update({ title: title }, {
         where: {
             userId: userId,
@@ -214,6 +347,31 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
     });
 });
 
+/*
+    DELETE /api/tasks
+
+    - Delete task
+
+    Request body:
+    {
+        "id": 0
+    }
+
+    Response body:
+    {
+        // Only if error occured
+        "error": "Error",
+
+        // true if all ok, else false
+        "success": true
+    }
+
+    Possible HTTP codes:
+        200: All ok
+        403: Unauthorized
+        400: Id is invalid
+        404: Task not found
+*/
 app.delete('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
     const { id } = req.body;
