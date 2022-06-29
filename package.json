@@ -1,0 +1,18 @@
+{
+  "name": "todoExpress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^7.2.2",
+    "yarn-recursive": "^1.1.0"
+  },
+  "scripts": {
+    "install-all": "yarn-recursive",
+    "web": "yarn --cwd frontend/ start",
+    "api": "yarn --cwd api/ start",
+    "proxy": "yarn --cwd proxy/ start",
+    "build": "yarn --cwd api/ build",
+    "start": "concurrently \"yarn run api\" \"yarn run web\" \"yarn run proxy\" --kill-others"
+  }
+}
