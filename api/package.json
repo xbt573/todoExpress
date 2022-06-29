@@ -14,10 +14,11 @@
     "sequelize-mig": "^3.1.3"
   },
   "scripts": {
+    "seq-init": "sequelize-cli init",
     "db-init": "sequelize-cli db:create --env production",
     "migration-create": "sequelize-mig migration:make -n mig",
     "migrate": "sequelize-cli db:migrate --env production",
-    "build": "yarn run db-init; yarn run migration-create; yarn run migrate",
+    "build": "yarn run seq-init; yarn run db-init; yarn run migration-create; yarn run migrate",
 
     "start": "node index.js"
   }

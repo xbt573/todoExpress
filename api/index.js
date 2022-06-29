@@ -9,7 +9,7 @@ const accessTokenSecret = 'youraccesstokensecret';
 const crypto = require('crypto');
 const makeHash = (str) => {
     return crypto.createHash('md5').update(str).digest('hex');
-}
+};
 
 const authJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -38,7 +38,7 @@ app.post('/api/register', async (req, res) => {
 
     if (!username || username.trim() == '') {
         res.status(400).json({
-            error: "Username is empty.",
+            error: 'Username is empty.',
             success: false
         });
         return;
@@ -46,7 +46,7 @@ app.post('/api/register', async (req, res) => {
 
     if (!password || password.trim() == '') {
         res.status(400).json({
-            error: "Password is empty.",
+            error: 'Password is empty.',
             success: false
         });
         return;
@@ -60,7 +60,7 @@ app.post('/api/register', async (req, res) => {
 
     if (user) {
         res.status(409).json({
-            error: "User already exists.",
+            error: 'User already exists.',
             success: false
         });
         return;
@@ -80,7 +80,7 @@ app.post('/api/login', async (req, res) => {
 
     if (!username || username.trim() == '') {
         res.status(400).json({
-            error: "Username is empty.",
+            error: 'Username is empty.',
             success: false
         });
         return;
@@ -88,7 +88,7 @@ app.post('/api/login', async (req, res) => {
 
     if (!password || password.trim() == '') {
         res.status(400).json({
-            error: "Password is empty.",
+            error: 'Password is empty.',
             success: false
         });
         return;
@@ -103,7 +103,7 @@ app.post('/api/login', async (req, res) => {
 
     if (!user) {
         res.status(403).json({
-            error: "Incorrect login or password.",
+            error: 'Incorrect login or password.',
             success: false
         });
         return;
@@ -121,7 +121,7 @@ app.post('/api/tasks', authJWT, async (req, res) => {
 
     if (!title || title.trim() == '') {
         res.status(400).json({
-            error: "Title is empty.",
+            error: 'Title is empty.',
             success: false
         });
         return;
@@ -136,7 +136,7 @@ app.post('/api/tasks', authJWT, async (req, res) => {
 
     if (task) {
         res.status(409).json({
-            error: "Task already exists.",
+            error: 'Task already exists.',
             success: false
         });
         return;
@@ -161,7 +161,7 @@ app.get('/api/tasks', authJWT, async (req, res) => {
         }
     });
 
-    const tasks = rawTasks.map(x => { return { id: x.id, title: x.title } });
+    const tasks = rawTasks.map(x => { return { id: x.id, title: x.title }; });
 
     res.json(tasks);
 });
@@ -172,7 +172,7 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
 
     if (!id) {
         res.status(400).json({
-            error: "ID is empty.",
+            error: 'ID is empty.',
             success: false
         });
         return;
@@ -180,7 +180,7 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
 
     if (!title || title.trim() == '') {
         res.status(400).json({
-            error: "Title is empty.",
+            error: 'Title is empty.',
             success: false
         });
         return;
@@ -195,7 +195,7 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
 
     if (!task) {
         res.status(404).json({
-            error: "Task not found.",
+            error: 'Task not found.',
             success: false
         });
         return;
@@ -220,7 +220,7 @@ app.delete('/api/tasks', authJWT, async (req, res) => {
 
     if (!id) {
         res.status(400).json({
-            error: "ID is empty.",
+            error: 'ID is empty.',
             success: false
         });
         return;
@@ -235,7 +235,7 @@ app.delete('/api/tasks', authJWT, async (req, res) => {
 
     if (!task) {
         res.status(404).json({
-            error: "Task not found.",
+            error: 'Task not found.',
             success: false
         });
         return;

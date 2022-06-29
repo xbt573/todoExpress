@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.2.0
+
+      - name: Setup PostgreSQL
+        uses: Harmon758/postgresql-action@v1.0.0
+        with:
+          postgresql db: todoexpress
+          postgresql user: postgres
+          postgresql password: postgres
+
+      - name: Setup packages
+        run: |
+          yarn
+          yarn install-all
+
+      - name: Migrate database
+        run: yarn build
+
+      - name: Lint code
+        run: yarn lint
