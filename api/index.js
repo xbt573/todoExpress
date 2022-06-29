@@ -168,7 +168,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     res.status(200).json({
-        jwt: jwt.sign({ userId: user[0].userId }, accessTokenSecret),
+        jwt: jwt.sign({ userId: user.userId }, accessTokenSecret),
         success: true
     });
 });

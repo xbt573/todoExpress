@@ -16,8 +16,8 @@
     "web": "yarn --cwd frontend/ start",
     "api": "yarn --cwd api/ start",
     "proxy": "yarn --cwd proxy/ start",
-    "build": "yarn --cwd api/ build",
+    "build": "yarn --cwd api/ build; yarn --cwd frontend/ build",
     "lint": "eslint api/index.js frontend/index.js proxy/index.js",
-    "start": "concurrently \"yarn run api\" \"yarn run web\" \"yarn run proxy\" --kill-others"
+    "start": "concurrently \"yarn api\" \"yarn web\" \"yarn proxy\" --kill-others"
   }
 }

@@ -1,13 +1,22 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.18.1"
-  },
-
+  "name": "vuehueta",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node index.js"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "start": "serve dist -l 8080"
+  },
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "bootstrap-vue": "^2.22.0",
+    "core-js": "^3.8.3",
+    "serve": "^13.0.2",
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
   }
 }
