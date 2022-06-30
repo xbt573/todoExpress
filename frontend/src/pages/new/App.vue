@@ -3,12 +3,6 @@
 </script>
 
 <script>
-    const token = localStorage.getItem('token');
-
-    if (!token || token == 'undefined') {
-        location.replace('/login');
-    }
-
     export default {
         methods: {
             createTask: async function() {
