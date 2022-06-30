@@ -1,3 +1,7 @@
+<script setup>
+    import '@/assets/custom.css';
+</script>
+
 <template>
     <nav class="navbar navbar-expand-lg bg-dark sticky">
         <div class="d-flex justify-content-between container-fluid">
@@ -10,10 +14,3 @@
         </div>
     </nav>
 </template>
-
-<style>
-    .sticky {
-        position: sticky !important;
-        z-index: 999999 !important;
-    }
-</style>

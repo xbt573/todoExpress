@@ -87,14 +87,31 @@
         },
 
         mounted: async function() {
-            await this.setTokens();
-            const response = await fetch('/api/tasks', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                }
-            });
+            // await this.setTokens();
+            // const response = await fetch('/api/tasks', {
+            //     headers: {
+            //         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            //     }
+            // });
 
-            this.tasks = await response.json();
+            // this.tasks = await response.json();
+            this.tasks = [
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' },
+                { id: 0, text: 'Hello World!' }
+            ];
         }
     }
 </script>
