@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-dark">
+    <nav class="navbar navbar-expand-lg bg-dark sticky">
         <div class="d-flex justify-content-between container-fluid">
             <a href="/" class="navbar-brand text-white px-1">ToDo</a>
 
@@ -10,3 +10,10 @@
         </div>
     </nav>
 </template>
+
+<style>
+    .sticky {
+        position: sticky !important;
+        z-index: 999999 !important;
+    }
+</style>
