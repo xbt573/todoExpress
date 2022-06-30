@@ -112,7 +112,7 @@
             </span>
 
             <input type="text" class="form-control" :id="'#'+task.id" :value="task.title" :onchange="onChange.bind(null, task.id)">
-            <button class="btn btn-outline-secondary" :onclick="deleteTask.bind(null, task.id)">Delete</button>
+            <button class="btn btn-outline-danger" :onclick="deleteTask.bind(null, task.id)">Delete</button>
         </div>
     </div>
 
