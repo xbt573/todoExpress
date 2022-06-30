@@ -11,11 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Tokens.init({
-        userId: {
-            type: DataTypes.UUID,
-            primaryKey: true
-        },
-
+        userId: DataTypes.UUID,
         refreshToken: DataTypes.STRING
     }, {
         sequelize,
