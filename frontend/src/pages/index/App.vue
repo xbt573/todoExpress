@@ -118,3 +118,9 @@
 
     <h1 class="mx-5 my-5" v-if="String(tasks) == ''">No tasks :/</h1>
 </template>
+
+<style>
+    body {
+        overflow: hidden;
+    }
+</style>

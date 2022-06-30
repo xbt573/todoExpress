@@ -83,9 +83,3 @@
         <button type="button" class="btn btn-primary mx-2" @click="register">Register</button>
     </div>
 </template>
-
-<style>
-    body {
-        overflow: hidden;
-    }
-</style>
