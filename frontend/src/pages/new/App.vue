@@ -18,10 +18,11 @@
                     return;
                 }
 
+                await this.setTokens();
                 const response = await fetch('/api/tasks', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -34,8 +35,32 @@
                     return;
                 }
 
-                alert('Success!');
                 location.replace('/');
+            },
+
+            setTokens: async function() {
+                const refreshToken = localStorage.getItem('refreshToken');
+
+                if (!refreshToken || refreshToken == 'undefined') {
+                    location.replace('/login');
+                }
+
+                const refresh = await fetch('/api/refresh', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        refreshToken: refreshToken
+                    })
+                });
+
+                if (!refresh.ok) {
+                    location.replace('/login');
+                }
+
+                const body = await refresh.json();
+                localStorage.setItem('accessToken', body.accessToken);
             }
         }
     }

@@ -43,9 +43,9 @@
                 }
 
                 const body = await response.json();
-                localStorage.setItem('token', body.jwt);
+                localStorage.setItem('refreshToken', body.refreshToken);
+                localStorage.setItem('accessToken', body.accessToken);
 
-                alert('Success!');
                 location.replace('/');
             },
 

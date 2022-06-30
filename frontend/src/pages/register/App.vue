@@ -42,7 +42,6 @@
                     }
                 }
 
-                alert('Success!');
                 location.replace('/login');
             },
 

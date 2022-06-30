@@ -2,10 +2,11 @@ const express = require('express');
 const app = express();
 
 // ORM models
-const { Users, Tasks } = require('./models');
+const { Users, Tasks, Tokens } = require('./models');
 
 const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'youraccesstokensecret';
+const refreshTokenSecret = 'yourrefreshtokensecret';
 
 const crypto = require('crypto');
 
@@ -37,31 +38,6 @@ const authJWT = (req, res, next) => {
 // Body parser
 app.use(express.json());
 
-/*
-    POST /api/register
-
-    - Register
-
-    Request body:
-    {
-        "username": "xbt573",
-        "password": "testpass"
-    }
-
-    Response body:
-    {
-        // Only if error occured
-        "error": "Error",
-
-        // true if all ok, else false
-        "success": true
-    }
-
-    Possible HTTP codes:
-        200: All ok
-        400: Username or password is invalid
-        409: User already exists
- */
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
 
@@ -104,35 +80,6 @@ app.post('/api/register', async (req, res) => {
     res.status(200).json({ success: true });
 });
 
-/*
-    POST /api/login
-
-    - Login
-
-    Request body:
-    {
-        "username": "xbt573",
-        "password": "testpass"
-    }
-
-    Response body:
-    {
-        // Only if error occured
-        "error": "Error",
-
-        // Only if all ok
-        "jwt": "jsonwebtoken",
-
-        // true if all ok, else false
-        "success": true
-    }
-
-    Possible HTTP codes:
-        200: All ok
-        400: Username or password is invalid
-        403: Username or password is incorrect
-
-*/
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -167,41 +114,84 @@ app.post('/api/login', async (req, res) => {
         return;
     }
 
+    const accessToken = jwt.sign({ userId: user.userId },
+        accessTokenSecret,
+        { expiresIn: '1m' });
+    const refreshToken = jwt.sign({ userId: user.userId },
+        refreshTokenSecret,
+        { expiresIn: '3d' });
+
+    await Tokens.create({
+        userId: user.userId,
+        refreshToken: refreshToken
+    });
+
     res.status(200).json({
-        jwt: jwt.sign({ userId: user.userId }, accessTokenSecret),
+        accessToken: accessToken,
+        refreshToken: refreshToken,
         success: true
     });
 });
 
 
-/*
-    POST /api/tasks
+app.post('/api/refresh', async (req, res) => {
+    const { refreshToken } = req.body;
 
-    - Create new task
-
-    Request headers:
-        Authorization: Bearer jsonwebtoken
-
-    Request body:
-    {
-        "title": "Hello World!"
+    if (!refreshToken || refreshToken.trim() == '') {
+        res.status(400).json({
+            error: "refreshToken is empty",
+            success: false
+        });
+        return;
     }
 
-    Response body:
-    {
-        // Only if error occured
-        "error": "Error",
+    const token = await Tokens.findOne({
+        where: {
+            refreshToken: refreshToken
+        }
+    });
 
-        // true if all ok, else false
-        "success": true
+    if (!token) {
+        res.status(403).json({
+            error: "Invalid refreshToken",
+            success: false
+        });
+        return;
     }
 
-    Possible HTTP codes:
-        200: All ok
-        403: Unauthorized
-        400: Title is invalid
-        409: Task already exists
-*/
+    const accessToken = jwt.sign({ userId: token.userId },
+        accessTokenSecret,
+        { expiresIn: '1m' });
+
+    res.status(200).json({
+        accessToken: accessToken,
+        refreshToken: token.refreshToken,
+        success: true
+    });
+});
+
+app.delete('/api/logout', async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken || refreshToken.trim() == '') {
+        res.status(400).json({
+            error: "refreshToken is empty",
+            success: false
+        });
+        return;
+    }
+
+    await Tokens.destroy({
+        where: {
+            refreshToken: refreshToken
+        }
+    });
+
+    res.status(200).json({
+        success: true
+    });
+});
+
 app.post('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
     const { title } = req.body;
@@ -239,27 +229,6 @@ app.post('/api/tasks', authJWT, async (req, res) => {
     });
 });
 
-/*
-    GET /api/tasks
-
-    - Get tasks
-
-    Request headers:
-        Authorization: Bearer jsonwebtoken
-
-    Request body: null
-
-    Response body:
-        Array of tasks:
-        {
-            "id": 0,
-            "title": "Hello World!"
-        }
-
-    Possible HTTP codes:
-        200: All ok
-        403: Unauthorized
-*/
 app.get('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
 
@@ -274,32 +243,6 @@ app.get('/api/tasks', authJWT, async (req, res) => {
     res.json(tasks);
 });
 
-/*
-    PATCH /api/tasks
-
-    - Update task
-
-    Request body:
-    {
-        "id": 0,
-        "title": "Hello World!"
-    }
-
-    Response body:
-    {
-        // Only if error occured
-        "error": "Error",
-
-        // true if all ok, else false
-        "success": true
-    }
-
-    Possible HTTP codes:
-        200: All ok
-        403: Unauthorized
-        400: Id or title is invalid
-        404: Task not found
-*/
 app.patch('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
     const { id, title } = req.body;
@@ -347,31 +290,6 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
     });
 });
 
-/*
-    DELETE /api/tasks
-
-    - Delete task
-
-    Request body:
-    {
-        "id": 0
-    }
-
-    Response body:
-    {
-        // Only if error occured
-        "error": "Error",
-
-        // true if all ok, else false
-        "success": true
-    }
-
-    Possible HTTP codes:
-        200: All ok
-        403: Unauthorized
-        400: Id is invalid
-        404: Task not found
-*/
 app.delete('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
     const { id } = req.body;

@@ -3,12 +3,6 @@
 </script>
 
 <script>
-    const token = localStorage.getItem('token');
-
-    if (!token || token == 'undefined') {
-        location.replace('/login');
-    }
-
     export default {
         data() {
             return {
@@ -20,17 +14,15 @@
             onChange: async function(id) {
                 const text = document.getElementById(`#${id}`).value;
 
-                console.log(text);
-                console.log({ id: id, title: text });
                 if (text.trim() == '') {
                     this.deleteTask(id);
                     return;
                 }
-
+                await this.setTokens();
                 const response = await fetch('/api/tasks', {
                     method: 'PATCH',
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -44,15 +36,15 @@
                     return;
                 }
 
-                alert('Success!');
                 location.reload();
             },
 
             deleteTask: async function(id) {
+                await this.setTokens();
                 const response = await fetch('/api/tasks', {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -65,15 +57,40 @@
                     return;
                 }
 
-                alert('Success!');
                 location.reload();
+            },
+
+            setTokens: async function() {
+                const refreshToken = localStorage.getItem('refreshToken');
+
+                if (!refreshToken || refreshToken == 'undefined') {
+                    location.replace('/login');
+                }
+
+                const refresh = await fetch('/api/refresh', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        refreshToken: refreshToken
+                    })
+                });
+
+                if (!refresh.ok) {
+                    location.replace('/login');
+                }
+
+                const body = await refresh.json();
+                localStorage.setItem('accessToken', body.accessToken);
             }
         },
 
         mounted: async function() {
+            await this.setTokens();
             const response = await fetch('/api/tasks', {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                 }
             });
 

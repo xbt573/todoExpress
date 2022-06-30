@@ -4,7 +4,7 @@
             <a href="/" class="navbar-brand text-white px-1">ToDo</a>
 
             <div class="px-2">
-                <a href="/" onclick="localStorage.setItem('token', 'undefined');" class="nav-item text-white text-decoration-none mx-3">Logout</a>
+                <a href="/login" onclick="localStorage.setItem('refreshToken', 'undefined');" class="nav-item text-white text-decoration-none mx-3">Logout</a>
                 <a href="/new" class="nav-item text-white text-decoration-none mx-3">New Task</a>
             </div>
         </div>
