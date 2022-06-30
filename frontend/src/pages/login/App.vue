@@ -63,12 +63,12 @@
         <h3>Login</h3>
 
         <div class="my-5">
-            <div class="input-group my-4 w-50">
+            <div class="input-group my-4 w-75">
                 <span class="input-group-text">@</span>
                 <input type="text" id="login" class="form-control" placeholder="Username">
             </div>
 
-            <div class="input-group my-4 w-50">
+            <div class="input-group my-4 w-75">
                 <span class="input-group-text">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
                         <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
