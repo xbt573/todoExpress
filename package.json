@@ -10,14 +10,14 @@
   "devDependencies": {
     "eslint": "^8.18.0"
   },
-
   "scripts": {
     "install-all": "yarn-recursive",
+    "upgrade-all": "yarn-recursive --cmd upgrade",
     "web": "yarn --cwd frontend/ start",
     "api": "yarn --cwd api/ start",
     "proxy": "yarn --cwd proxy/ start",
     "build": "yarn install-all; yarn --cwd api/ build; yarn --cwd frontend/ build",
-    "lint": "eslint api/index.js frontend/index.js proxy/index.js",
+    "lint": "eslint api/index.js proxy/index.js",
     "start": "concurrently \"yarn api\" \"yarn web\" \"yarn proxy\" --kill-others"
   }
 }

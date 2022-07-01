@@ -17,7 +17,6 @@
     "migration-create": "sequelize-mig migration:make -n mig",
     "migrate": "sequelize-cli db:migrate --env production",
     "build": "yarn migration-create; yarn migrate",
-
     "start": "node index.js"
   }
 }
