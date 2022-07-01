@@ -1,7 +1,9 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import App from './App.svelte'
 
-import 'bootstrap/dist/css/bootstrap.css'
-// import 'bootstrap-vue/dist/bootstrap-vue.css'
+import '../../assets/app.css'
 
-createApp(App).mount('#app')
+const app = new App({
+  target: document.getElementById('app')
+})
+
+export default app

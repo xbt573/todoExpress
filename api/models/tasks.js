@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     }
     Tasks.init({
         userId: DataTypes.UUID,
-        title: DataTypes.STRING
+        title: DataTypes.STRING,
+        color: DataTypes.STRING,
+        completed: DataTypes.BOOLEAN
     }, {
         sequelize,
         modelName: 'Tasks',

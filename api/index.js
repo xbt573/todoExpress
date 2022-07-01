@@ -194,11 +194,27 @@ app.delete('/api/logout', async (req, res) => {
 
 app.post('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
-    const { title } = req.body;
+    const { title, color, completed } = req.body;
 
     if (!title || title.trim() == '') {
         res.status(400).json({
             error: 'Title is empty.',
+            success: false
+        });
+        return;
+    }
+
+    if (!color || color.trim() == '') {
+        res.status(400).json({
+            error: 'Color is empty.',
+            success: false
+        });
+        return;
+    }
+
+    if (typeof completed != 'boolean') {
+        res.status(400).json({
+            error: 'completed is not a boolean.',
             success: false
         });
         return;
@@ -221,7 +237,9 @@ app.post('/api/tasks', authJWT, async (req, res) => {
 
     await Tasks.create({
         userId: userId,
-        title: title
+        title: title,
+        color: color,
+        completed: completed
     });
 
     res.status(200).json({
@@ -238,14 +256,23 @@ app.get('/api/tasks', authJWT, async (req, res) => {
         }
     });
 
-    const tasks = rawTasks.map(x => { return { id: x.id, title: x.title }; });
+    const tasks = rawTasks.map(x => {
+        return {
+            id: x.id,
+            title: x.title,
+            color: x.color,
+            completed: x.completed
+        };
+    });
 
     res.json(tasks);
 });
 
 app.patch('/api/tasks', authJWT, async (req, res) => {
     const { userId } = req.user;
-    const { id, title } = req.body;
+    const { id, title, color, completed } = req.body;
+
+    console.log(req.body);
 
     if (!id) {
         res.status(400).json({
@@ -258,6 +285,22 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
     if (!title || title.trim() == '') {
         res.status(400).json({
             error: 'Title is empty.',
+            success: false
+        });
+        return;
+    }
+
+    if (!color || color.trim() == '') {
+        res.status(400).json({
+            error: 'Color is empty.',
+            success: false
+        });
+        return;
+    }
+
+    if (typeof completed != 'boolean') {
+        res.status(400).json({
+            error: 'completed if not a boolean',
             success: false
         });
         return;
@@ -278,7 +321,7 @@ app.patch('/api/tasks', authJWT, async (req, res) => {
         return;
     }
 
-    await Tasks.update({ title: title }, {
+    await Tasks.update({ title, color, completed }, {
         where: {
             userId: userId,
             id: id
